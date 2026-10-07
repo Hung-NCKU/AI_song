@@ -1,0 +1,2 @@
+test: distinct U ours=170107 1st=170107; model-expected DCG of raw top-5=0.7573
+submission written: (143064, 6) t=376s

@@ -1,0 +1,18 @@
+training sequences (715323, 25) known items 762682
+epoch 1 loss=7.0372 t=131s
+[SASRec ep1 (20k val)] DCG=0.25692 cov_slots=0.1396 cov_tgt=0.3075 | score(cov_slots)=0.23347
+epoch 2 loss=5.1629 t=249s
+[SASRec ep2 (20k val)] DCG=0.32502 cov_slots=0.2537 cov_tgt=0.5586 | score(cov_slots)=0.31076
+epoch 3 loss=4.6445 t=367s
+[SASRec ep3 (20k val)] DCG=0.34536 cov_slots=0.3256 cov_tgt=0.7167 | score(cov_slots)=0.34140
+epoch 4 loss=4.3188 t=486s
+[SASRec ep4 (20k val)] DCG=0.35534 cov_slots=0.3876 cov_tgt=0.8534 | score(cov_slots)=0.36180
+epoch 5 loss=4.1157 t=608s
+[SASRec ep5 (20k val)] DCG=0.36416 cov_slots=0.4278 cov_tgt=0.9419 | score(cov_slots)=0.37689
+epoch 6 loss=4.0174 t=723s
+[SASRec ep6 (20k val)] DCG=0.36354 cov_slots=0.4400 cov_tgt=0.9686 | score(cov_slots)=0.37883
+[SASRec standalone, all val] DCG=0.35772 cov_slots=0.2296 cov_tgt=0.9150 | score(cov_slots)=0.33210
+[SASRec standalone, val half B] DCG=0.35407 cov_slots=0.3081 cov_tgt=0.9441 | score(cov_slots)=0.34488
+sas_val.parquet (13286140, 5)
+sas_test.parquet (16598870, 5)
+recall: SASRec top50=0.3501  rules+SASRec top30=0.4426  t=793s

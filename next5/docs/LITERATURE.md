@@ -11,7 +11,7 @@
 | Garg et al., *Sequence and Time Aware Neighborhood for Session-based Recommendations (STAN)* | SIGIR 2019 | 依「在 session 中的位置」與「時間」對鄰居 session 加權 | 以位置衰減 0.8^(j−3) 彙總 session 前段歌曲的延續訊號（特徵 `far`） |
 | Jannach & Ludewig, *When Recurrent Neural Networks meet the Neighborhood for Session-Based Recommendation* | RecSys 2017 | kNN 與 GRU4Rec 互補，結合後更好 | 支持「多來源特徵 + 學習排序」的融合設計 |
 
-## 2. 深度序列模型（調研後評估，未納入最終模型）
+## 2. 深度序列模型（SASRec 已實測，作為互補訊號納入最終模型）
 
 | 論文 | 出處 | 重點 |
 |---|---|---|
@@ -22,7 +22,10 @@
 | Sun et al., *BERT4Rec* | CIKM 2019 | 雙向 Transformer + Cloze 訓練 |
 | Klenitskiy & Vasilev, *Turning Dross Into Gold Loss: is BERT4Rec really better than SASRec?* | RecSys 2023 | SASRec 改用 full cross-entropy 後超越 BERT4Rec |
 
-**為何沒放進最終模型**：本資料約 77 萬首歌、71.5 萬個 session，而且 83% 的歌出現次數很少（冷啟動嚴重）。這種情況下，item embedding 很難學好。Ludewig & Jannach 的實證，以及本次第一名「GNN 效果不好，所以改用統計」的經驗，都指向同一個結論：序列規則已經把可學的訊號吃得差不多了。深度模型列為後續工作，可以當成額外的候選來源或特徵加入。
+**實測結果**（見 [RESEARCH_LOG.md §7](RESEARCH_LOG.md#7-深度學習實驗sasrectransformer)）：
+
+- 本資料約 77 萬首歌、大多是長尾，item embedding 很難學好。實作 SASRec（multi-target + sampled softmax with logQ）後，單獨使用的 DCG 只有 0.358，第 1 名 n-gram 是 0.664。這和 Ludewig & Jannach 的實證，以及第 1 名「GNN 練不起來」的經驗一致。
+- 但把它當成額外的候選來源和特徵加進 LightGBM，召回率從 41.1% 升到 44.3%，DCG 從 0.7384 升到 0.7429。也就是說，深度模型適合當作**互補訊號**，不適合取代序列規則。
 
 ## 3. 重複消費
 

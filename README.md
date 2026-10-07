@@ -5,7 +5,7 @@ KKCompany Data Game 2023（[datagame-2023](https://www.kaggle.com/competitions/d
 | 版本 | 位置 | 方法 | 分數 |
 |---|---|---|---|
 | 2023 課程版 | 根目錄（`model.py`、`score.py` …） | 熱門度回歸 + XGBoost | 官方 Public 0.168～0.179 |
-| 2026 研究版 | [`next5/`](next5/) | 序列規則召回 + LightGBM 學習排序 + coverage 控制 | 本地驗證 0.643（同驗證集第 1 名 0.583） |
+| 2026 研究版 | [`next5/`](next5/) | 序列規則 + SASRec 召回 → LightGBM 學習排序 + coverage 控制 | 本地驗證 0.646（同驗證集第 1 名 0.583） |
 
 ## 新舊方法比較
 
@@ -32,10 +32,10 @@ KKCompany Data Game 2023（[datagame-2023](https://www.kaggle.com/competitions/d
 | 問題定義 | 對每筆播放回歸熱門度 | 預測「歌曲 ∈ 接下來 5 首」的機率（對應不看順序的 DCG） |
 | 使用的訊號 | 單筆播放的欄位 | session 內的播放順序（n-gram／序列規則）、重複行為、歌曲 metadata |
 | 候選 | 只有 session 內的 20 首 | session 內的歌 + 語料中「此上下文之後出現過的歌」（約 85 個／session） |
-| 模型 | XGBoost 回歸 | 兩階段：召回 + LightGBM 學習排序 |
+| 模型 | XGBoost 回歸 | 兩階段：召回（序列規則 + SASRec Transformer）+ LightGBM 學習排序 |
 | 驗證 | 隨機切分播放紀錄、看 MSE（和評分無關） | 依比賽評分公式在獨立 session 上計算 DCG／Coverage |
 | 熱門度 | 只推熱門歌 | 顯式控制 coverage |
-| DCG@5（同一驗證集） | 0.179 | **0.738** |
+| DCG@5（同一驗證集） | 0.179 | **0.743** |
 
 完整的研究過程、評分公式考證、文獻調研與實驗紀錄：
 

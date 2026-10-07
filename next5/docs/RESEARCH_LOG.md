@@ -74,7 +74,8 @@
 | 啟發式序列規則分數 `hscore` | L=1..4、j=0..2 的位移機率加權和 | 0.6442 |
 | LightGBM LambdaRank（第一版特徵） | + 重複消費、熱門度、metadata 特徵 | 0.7265 |
 | + 遠端鄰域 `far`、stacking `winner_rank`、候選數 80 | | 0.7297 |
-| binary LightGBM、2-fold OOF（全驗證） | | **0.7387**（全驗證） |
+| binary LightGBM、2-fold OOF（全驗證） | | 0.7387（全驗證） |
+| + SASRec 候選與特徵（混合，§7） | | **0.7433**（全驗證，未控制 coverage） |
 
 ### 5.1 候選生成（`candidates.py`）
 
@@ -149,12 +150,47 @@ Coverage 分母 D 是對測試集（143,064 個 session、715,320 格）定義�
   - 修正後，測試 DCG 估計約 0.742，略高於驗證值，符合 §4 的語料大小效應。
 - `submission.csv` 已上傳 Kaggle（2026-10-07），但官方評分程式回傳錯誤，所以沒有官方分數。
 
-## 7. 限制與後續
+## 7. 深度學習實驗：SASRec（Transformer）
+
+想回答的問題：時序模型或 Transformer 會不會比較好？我實作了 SASRec（Kang & McAuley, ICDM 2018，`sasrec.py`），先單獨評估，再當作額外的候選來源和特徵加進 LightGBM。
+
+**設定**
+
+- 模型：2 層、4 頭、d=128，dropout 0.2。
+- 輸入：位置以 listening_order 對齊（session 都從第 1 首開始），使用因果注意力。
+- 訓練目標：每個位置同時預測後面第 1～5 首（multi-target），對應「不看順序」的評分。
+- 輸出層：77 萬首歌太多，改用 sampled softmax，每批共用 8,192 個負樣本，按 unigram^0.75 抽樣並做 logQ 校正，近似完整的 cross-entropy（Klenitskiy & Vasilev, RecSys 2023）。
+- 訓練：batch 512、6 個 epoch、OneCycle lr 2e-3，在 RTX 5060 上約 12 分鐘。
+- 語料和 LightGBM 驗證時完全相同，不含任何驗證答案。
+
+**單獨使用**
+
+| epoch | 1 | 2 | 3 | 4 | 5 | 6 |
+|---|---|---|---|---|---|---|
+| DCG（20k 驗證） | 0.257 | 0.325 | 0.345 | 0.355 | 0.364 | 0.364 |
+
+- 完整驗證集 DCG = **0.358**，大約只有第 1 名 n-gram（0.664）的一半，已經收斂。
+- 原因和事前分析一致：
+  - 77 萬首歌大多是長尾，embedding 學不好。
+  - 這份資料最強的訊號是歌單或專輯的「精確接續」，n-gram 可以直接查表記住，Transformer 只能用參數去近似。
+
+**混合使用**（SASRec 的 top-30 加進候選池，`sas_score`、`sas_rel`、`sas_rank` 當成 LightGBM 特徵，`train_final.py … sas`）
+
+| | 召回率 | DCG@5 | score（D = 總格數） | score（D = meta 歌曲數） |
+|---|---|---|---|---|
+| 不含 SASRec | 41.1% | 0.7384 | 0.6427 | 0.6268 |
+| **+ SASRec** | **44.3%** | **0.7429** | **0.6463** | **0.6304** |
+
+- SASRec 補到了序列規則漏掉的歌，召回率 +3.1 個百分點，DCG +0.0045。
+- 結論：Transformer **不適合單獨使用，但當成互補訊號有幫助**。這和 Jannach & Ludewig（RecSys 2017）「kNN 與 RNN 互補」的結論一致。最終模型採用混合版。
+- 混合版的測試提交檔：U = 170,107（和第 1 名相同）。模型自估 DCG 0.757，扣掉驗證集上量到的約 0.011 高估後，約 0.746。
+
+## 8. 限制與後續
 
 - 官方評分程式關閉，以上都是本地驗證，Coverage 分母未知（已用「與 D 無關」的比較方式處理）。
 - 第 1 名的 JMLM（pyserini）部分沒有移植，因為需要 Java/Lucene 索引。它的官方增益是 +0.0101，我們的比較對象是它的純 n-gram 版本，這點已在上面說明。
 - 可能的改進：
-  - 加入 SASRec／GRU4Rec 當額外的候選來源
+  - SASRec 調參（更大的 d、更多 epoch、全量 softmax），或改用 GRU4Rec／SR-GNN 當額外的候選來源
   - item2vec 相似度特徵
   - 用 K-fold 讓所有訓練 session 都參與排序模型訓練
   - 依真實 D 做最佳化的 coverage 取捨（每多 1 首不重複歌，價值是 0.2/D）
