@@ -1,0 +1,2 @@
+[legacy proxy: 5 most popular songs already in session] DCG=0.17938 cov_slots=0.0939 cov_tgt=0.3742 | score(cov_slots)=0.16228
+[baseline: last 5 distinct songs] DCG=0.18080 cov_slots=0.2598 cov_tgt=1.0353 | score(cov_slots)=0.19660

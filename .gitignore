@@ -1,0 +1,6 @@
+# Competition data and anything derived from it must not be redistributed.
+datagame-2023/
+data/
+next5/work/
+*.npy
+__pycache__/

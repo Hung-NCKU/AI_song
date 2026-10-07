@@ -1,0 +1,6 @@
+frac=0.5
+[1st-place only_ngrams (all val)] DCG=0.62587 cov_slots=0.2595 cov_tgt=1.0343 | score(cov_slots)=0.55260
+frac=0.75
+[1st-place only_ngrams (all val)] DCG=0.64624 cov_slots=0.2598 cov_tgt=1.0353 | score(cov_slots)=0.56895
+frac=1.0
+[1st-place only_ngrams (all val)] DCG=0.66365 cov_slots=0.2599 cov_tgt=1.0357 | score(cov_slots)=0.58290

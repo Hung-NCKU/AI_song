@@ -1,0 +1,11 @@
+rows 9716969 features 68 pos rate 0.02263360107457377 t=11s
+[1st-place only_ngrams (port)] DCG=0.65728 cov_slots=0.3401 cov_tgt=1.0422 | score(cov_slots)=0.59385
+[heuristic hscore (seq-rules only)] DCG=0.64422 cov_slots=0.3015 cov_tgt=0.9239 | score(cov_slots)=0.57568
+Training until validation scores don't improve for 50 rounds
+[100]	valid_0's ndcg@5: 0.671301
+[200]	valid_0's ndcg@5: 0.671899
+Early stopping, best iteration is:
+[177]	valid_0's ndcg@5: 0.672022
+[LightGBM lambdarank] DCG=0.72972 cov_slots=0.2847 cov_tgt=0.8723 | score(cov_slots)=0.64071
+top features: [('hscore', 430599), ('winner_rank', 293109), ('sup_L3j0', 178287), ('sup_L4j0', 125231), ('ps_L3j0', 63892), ('insess_cnt', 54718), ('same_art_cnt', 40199), ('q_uniq_art', 38916), ('far', 38198), ('q_uniq', 34903), ('src_cnt', 24774), ('pop', 23379), ('last_pos', 22441), ('ps_L1j0', 19822), ('p1_L1j0', 19118), ('first_pos', 17047), ('sup_L1j1', 16491), ('ps_L2j0', 16202), ('n_L1j0', 15633), ('sup_L1j2', 13964), ('cand_len', 13624), ('ps_L4j0', 11840), ('ps_L1j2', 11436), ('ps_L1j1', 11147), ('sup_L4j2', 11109)]
+best_iter=177 t=123s

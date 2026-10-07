@@ -1,0 +1,14 @@
+target=0.0x  U=128,355  DCG=0.73865
+target=1.0x  U=148,729  DCG=0.73837
+target=1.1x  U=163,601  DCG=0.73195
+target=1.2x  U=178,474  DCG=0.72841
+target=1.3x  U=188,571  DCG=0.71901
+target=1.4x  U=188,571  DCG=0.71901
+target=1.5x  U=188,571  DCG=0.71901
+target=1.6x  U=188,571  DCG=0.71901
+target=1.7x  U=188,571  DCG=0.71901
+
+1st place: U=148,729 DCG=0.66365
+D = #slots        : best target 1.2x -> score 0.64510  (1st: 0.58290, ours@1.0x: 0.64268)
+D = #played songs : best target 1.2x -> score 0.64043  (1st: 0.57900, ours@1.0x: 0.63878)
+D = #meta songs   : best target 1.0x -> score 0.62677  (1st: 0.56700, ours@1.0x: 0.62677)

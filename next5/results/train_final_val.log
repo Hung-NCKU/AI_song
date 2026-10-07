@@ -1,0 +1,10 @@
+fold 0 done t=165s
+fold 1 done t=298s
+[1st-place only_ngrams (port), all val] DCG=0.66365 cov_slots=0.2599 cov_tgt=1.0357 | score(cov_slots)=0.58290
+[ours: LightGBM top-5 (no coverage control)] DCG=0.73865 cov_slots=0.2243 cov_tgt=0.8938 | score(cov_slots)=0.63578
+[ours: + coverage control (U >= 1st place)] DCG=0.73837 cov_slots=0.2599 cov_tgt=1.0357 | score(cov_slots)=0.64268
+distinct songs U: 1st=148729 ours_raw=128355 ours_cov=148729
+D=  715,320: 1st=0.57251  ours_raw=0.62680  ours_cov=0.63228
+D=  773,314: 1st=0.56939  ours_raw=0.62411  ours_cov=0.62916
+D=1,030,712: 1st=0.55978  ours_raw=0.61582  ours_cov=0.61956
+test: distinct U ours=170107 1st=170107; expected DCG(sum p of picks)=0.7530
